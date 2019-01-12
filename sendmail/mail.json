@@ -1,0 +1,14 @@
+{
+	"host": "mail.fihtdc.com",
+	"user": "",
+	"password": "",
+	"enable_ssl": "false",
+    "port": "",
+    "mail_from": "FIH-BDC-XTS-Report@fih-foxconn.com",
+	"mail_to": [
+		 "Baochun.Dai",
+		 "hongmei.liu",
+		 "Queenie.KW.Kun"
+		],
+	"cc": []
+}
