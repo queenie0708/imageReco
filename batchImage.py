@@ -8,6 +8,7 @@ resultPath = 'D:\\test\\result\\Processed'
 finalPath = 'D:\\test\\result\\done'
 def processImage(scourcePath,savePath):
    image = Image.open(scourcePath)
+   image = image.save(scourcePath,dpi=(300,300))
    #image = image.convert('1')
    image = image.convert('L').rotate(180)
    enhancer = ImageEnhance.Contrast(image)

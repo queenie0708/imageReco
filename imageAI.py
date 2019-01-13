@@ -4,6 +4,7 @@ import cv2
 import json
 from time import sleep
 from PIL import Image
+from pytesseract import image_to_string
 
 def initResultJson(expectString):
     result = {}
@@ -36,27 +37,26 @@ def takePhoto():
 def photoRecognise(resultJson):
     rawPath = './Camera'
     resultPath = 'D:\\Processed'
-    finalPath = 'D:\\Done'
+
     if resultPath not in os.listdir('D:\\'):
         os.mkdir(resultPath)
     if finalPath not in os.listdir('D:\\'):
         os.mkdir(finalPath)
    def processImage(scourcePath,savePath):
        image = Image.open(scourcePath)
+       newImage = image.save(scourcePath,dpi=(300,300))
        #image = image.convert('1')
-       image = image.convert('L').rotate(180)
-       enhancer = ImageEnhance.Contrast(image)
+       area = (20, 25, 1770, 1770)#(left,right,top,bottom)
+       newImage = newImage.convert('L').rotate(180)
+       newImage = newImage.crop(area)
+       enhancer = ImageEnhance.Contrast(newImage)
        newImage = enhancer.enhance(1).save(savePath)
        return newImage
-   def cropImage(scourcePath,savePath):
-        image = cv2.imread(scourcePath)
-        cropImg = image[305:1889,537:2097] #can also try image.crop Ystart:Yend,Xstart:Xend
-        cv2.imwrite(savePath,cropImg)
-        return cropImg
-
-    processImage(rawPath,resultPath)
-    cropImage(savePath,donePath)
-    actualResult = image_to_string(Image.open(donePath), lang='eng')
+    pics = os.listdir(rawPath)
+    photoPath = rawPath + '\\' + pics[0]
+    processPath = resultPath + '\\' + pics[0]
+    processImage(photoPath,processPath) 
+    actualResult = image_to_string(Image.open(processPath), lang='eng')
     print (actualResult)
     #resultJson['data']['actual']=[]
 
