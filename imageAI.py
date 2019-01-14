@@ -1,6 +1,5 @@
 import os
 import subprocess
-import cv2
 import json
 from time import sleep
 from PIL import Image
@@ -62,8 +61,8 @@ def takePhoto():
         if ret_code == 0:
             sleep(3)
             ret_code, err_msg = subprocess.getstatusoutput('adb shell input tap 416 1706')
-            sleep(3)
-            ret_code, err_msg = subprocess.getstatusoutput('adb shell input tap 416 1706')
+            # sleep(3)
+            # ret_code, err_msg = subprocess.getstatusoutput('adb shell input tap 416 1706')  take 2 process 2 diffrent img when retry
             print(ret_code, err_msg)
             if ret_code == 0:
                 sleep(5)
@@ -84,7 +83,7 @@ def photoRecognise(resultJson):
        print('we are processing Image')
        image = Image.open(scourcePath)
        #image = image.convert('1')
-       newImage = image.convert('L').rotate(180)
+       newImage = image.convert('L')
        newImage = newImage.crop(area)
        enhancer = ImageEnhance.Contrast(newImage)
        newImage = enhancer.enhance(1).save(savePath,dpi=(300,300))
@@ -93,19 +92,19 @@ def photoRecognise(resultJson):
     pics = os.listdir(rawPath)
     photoPath = rawPath + '\\' + pics[-1]
     processPath = resultPath + '\\' + pics[-1]
-    area = (350, 117, 1573, 979) #left,top,right,bottom
+    area = (1297, 261, 2597, 1197) #left,top,right,bottom
     processImage(photoPath,processPath,area)
     print('image process done')
     actualResult = image_to_string(Image.open(processPath), lang='eng')
     print ('actualResult: ',actualResult)
     if actualResult.strip() != '':
-        lines = actualResult.split("\r\n")
+        lines = actualResult.lower().split("\r\n")
         lines_stripped = [x.strip() for x in lines]
         resultJson['data']['actual'] = lines_stripped
-        if resultJson['data']['expect'] == resultJson['data']['actual'][0]:
+        if resultJson['data']['expect'] in resultJson['data']['actual'][0]: #
             setResultJson(resultJson,code=200,status='OK')
         else:
-            setResultJson(resultJson,code=400,status='not found',err_msg='expect not in actaul')
+            setResultJson(resultJson,code=404,status='not found',err_msg='expect not in actaul')
     else:
         setResultJson(resultJson,code=204,status='find nothing',err_msg='recognised empty string')
     return resultJson
@@ -121,7 +120,7 @@ def _main():
            verbose_flag = True
        success = True
        print('expect:', args.expect)
-       resultJson=initResultJson(args.expect)
+       resultJson=initResultJson(args.expect.lower())
    except Exception as e:
        print("e=", e)
        print('500 failed to get expect from -e')

@@ -10,7 +10,7 @@ def processImage(scourcePath,savePath,area):
    image = Image.open(scourcePath)
    #image = image.convert('1')
    print('We are processing Image')
-   image = image.convert('L').rotate(270)
+   image = image.convert('L')
    #area = (300, 300, 1889, 1889) #(left,top,right,bottom)
    image = image.crop(area)
    enhancer = ImageEnhance.Contrast(image)
@@ -27,7 +27,10 @@ for file in os.listdir(rawPath):
     imagePath = rawPath + '\\' + file
     savePath = resultPath + '\\' + file
     #donePath = finalPath + '\\' + file
-    area = (17, 1145, 2081, 2489)
+    #area = (1297, 241, 2897, 1497) # smallest area  15/18
+    area = (1297, 261, 2597, 1197)  #16/18 including Contact
+    area = (1297, 271, 2597, 1197)  # 16/18
+    #area = (1297, 241, 2897, 2209) # big area 12/18
     processImage(imagePath,savePath,area)
     #cropImage(savePath,donePath)
     print (image_to_string(Image.open(savePath), lang='eng'))
