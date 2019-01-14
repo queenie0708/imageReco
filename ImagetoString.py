@@ -24,6 +24,12 @@ def cropImage(scourcePath,savePath):
     return cropImg
 pathA = 'D:\\test\\result\\Camera\\convertE.jpg'
 pathB = 'D:\\test\\result\\Camera\\convertECroped.jpg'
-cropImage(pathA,pathB)
-print (image_to_string(Image.open(pathB), lang='eng'))
+#cropImage(pathA,pathB)
+result = image_to_string(Image.open(r'D:/test/result/Processed/call.jpg'), lang='eng')
+print(result)
+if result.strip() != '':
+#if result is not None:
+    print('seems we got something')
+else:
+    print('204')
 
